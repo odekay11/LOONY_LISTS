@@ -8,7 +8,7 @@ Author: Owen DeKay
 #include <assert.h>
 #include <stdlib.h>
 #include "list.h"
-#define INTIAL_NODE_SIZE 2
+#define NODE_SIZE 64
 
 
 typedef struct node{
@@ -36,10 +36,9 @@ typedef struct list{
     NODE *node=malloc(sizeof(NODE));
     assert(node!=NULL);
 
-    node->data=malloc(sizeof(void *)*INTIAL_NODE_SIZE);
+    node->data=malloc(sizeof(void *)*NODE_SIZE);
     assert(node->data!=NULL);
-
-    node->size=INTIAL_NODE_SIZE;
+    node->size=NODE_SIZE;
     node->first=0;
     node->count=0;
     node->next=NULL;
@@ -75,6 +74,25 @@ typedef struct list{
  }
 
  void addFirst(LIST *lp, void *item){
+    assert(lp!=NULL);
+    if(lp->head->count ==lp->head->size){
+        NODE *newNode=malloc(sizeof(NODE));
+        assert(newNode!=NULL);
+        newNode->data=malloc(sizeof(void *)*NODE_SIZE);
+        assert(newNode->data!=NULL);
+        newNode->next=lp->head;
+        newNode->prev=NULL;
+        lp->head->prev=newNode;
+        lp->head=newNode;
+        newNode->size=NODE_SIZE;
+        newNode->first=0;
+        newNode->count=0;
+    }
+    //Update first to new value
+    lp->head->first=(lp->head->first-1 +lp->head->count)%lp->head->size;
+    lp->head-data[lp->head->first]=item;
+    lp->head->count++;
+    lp->count++;
 
  }
 
