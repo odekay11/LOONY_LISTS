@@ -69,6 +69,8 @@ typedef struct list{
  }
 
  int numItems(LIST *lp){
+    assert(lp!=NULL);
+    return lp->count;
 
  }
 
