@@ -48,6 +48,7 @@ typedef struct list{
     lp->head=node;
     lp->tail=node;
 
+    return lp;
 
  }
 
@@ -97,7 +98,25 @@ typedef struct list{
  }
 
  void addLast(LIST *lp, void *item){
-
+    assert(lp!=NULL);
+    if(lp->tail->count == lp->tail->size){
+        NODE *newNode=malloc(sizeof(NODE));
+        assert(newNode!=NULL);
+        newNode->data=malloc(sizeof(void *)*NODE_SIZE);
+        assert(newNode->data!=NULL);
+        newNode->size=NODE_SIZE;
+        newNode->first=0;
+        newNode->count=0;
+        
+        newNode->prev=lp->tail;
+        newNode->next=NULL;
+        lp->tail->next=newNode;
+        lp->tail=newNode;
+    }
+    //Compute the last slot in the array
+    lp->tail->data[(lp->tail->first+lp->tail->count)%lp->tail->size]=item;
+    lp->tail->count++;
+    lp->count++;
  }
 
  void *removeFirst(LIST *lp){
