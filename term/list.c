@@ -169,11 +169,31 @@ typedef struct list{
     assert(lp!=NULL);
     int index=(lp->tail->first + lp->tail->count -1)%lp->tail->size;
     return lp->tail->data[index];
-    
+
 
  }
 
  void *getItem(LIST *lp, int index){
+    assert(lp!=NULL && index>=0 && lp->count>index);
+    NODE *temp;
+    //Closer to the head start at the head
+    if(index<lp->count/2){
+        temp=lp->head;
+        while(index>= temp->count){
+            index=index-temp->count;
+            temp=temp->next;
+        }
+    }else{
+        //Closer to the tail start at the tail
+        temp=lp->tail;
+        int nodeStart=lp->count-temp->count;
+        while(index<nodeStart){
+            temp=temp->prev;
+            nodeStart=nodeStart-temp->count;
+        }
+        index=index-nodeStart;
+    }
+    return temp->data[(temp->first+index)%temp->size];
 
  }
 
