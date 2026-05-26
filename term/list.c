@@ -120,23 +120,47 @@ typedef struct list{
  }
 
  void *removeFirst(LIST *lp){
+    //Check for empty list
     assert(lp!=NULL && lp->count>0);
-    if(lp->head->count==0){
+    //Get value
+    void *value=lp->head->data[lp->head->first];
+    //Move first
+    lp->head->first=(lp->head->first +1 )%lp->head->size;
+    lp->head->count--;
+    lp->count--;
+    if(lp->head->count==0 && lp->head->next!=NULL){
         NODE *temp=lp->head;
         lp->head=temp->next;
         lp->head->prev=temp->prev;
+        free(temp->data);
         free(temp);
-        return;
+        
     }
-    lp->head->first=(lp->head->first +1 +lp->head->count)%lp->head->size;
-
+    return value;
  }
 
  void *removeLast(LIST *lp){
+    assert(lp!=NULL && lp->count>0);
+    //Get last item
+    int index=(lp->tail->first + lp->tail->count -1)%lp->tail->size;
+    void *value=lp->tail->data[index];
+    //decreament count
+    lp->tail->count--;
+    lp->count--;
+    //check edge cases
+    if(lp->tail->count==0 && lp->tail->prev!=NULL){
+        NODE *temp=lp->tail;
+        lp->tail=temp->prev;
+        lp->tail->next=NULL;
+        free(temp->data);
+        free(temp);
+    }
+    return value;
 
  }
 
  void *getFirst(LIST *lp){
+    assert
 
  }
 
