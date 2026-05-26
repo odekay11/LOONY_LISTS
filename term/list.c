@@ -160,11 +160,16 @@ typedef struct list{
  }
 
  void *getFirst(LIST *lp){
-    assert
+    assert(lp!=NULL);
+    return lp->head->data[lp->head->first];
 
  }
 
  void *getLast(LIST *lp){
+    assert(lp!=NULL);
+    int index=(lp->tail->first + lp->tail->count -1)%lp->tail->size;
+    return lp->tail->data[index];
+    
 
  }
 
