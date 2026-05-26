@@ -198,5 +198,25 @@ typedef struct list{
  }
 
  void setItem(LIST *lp, int index, void *item){
+    assert(lp!=NULL && index>=0 && index<lp->count);
+    NODE *temp;
+    //Closer to the head start at the head
+    if(index<lp->count/2){
+        temp=lp->head;
+        while(index>= temp->count){
+            index=index-temp->count;
+            temp=temp->next;
+        }
+    }else{
+        //Closer to the tail start at the tail
+        temp=lp->tail;
+        int nodeStart=lp->count-temp->count;
+        while(index<nodeStart){
+            temp=temp->prev;
+            nodeStart=nodeStart-temp->count;
+        }
+        index=index-nodeStart;
+    }
+    temp->data[(temp->first+index)%temp->size]=item;
 
  }
