@@ -16,15 +16,15 @@ typedef struct node{
     int count; //number of elements stored at a given node
     int first;//index of the first element in the circular queue
     int size;//how many slots are in a node
-    struct NODE *next; //next node 
-    struct NODE *prev;//previous node
+    struct node *next; //next node 
+    struct node *prev;//previous node
 
 }NODE;
 
 typedef struct list{
     int count; //total number of elements stored in the list 
-    struct LIST *head;//first node 
-    struct LIST *tail;//last node
+    struct node *head;//first node 
+    struct node *tail;//last node
 }LIST;
 
  LIST *createList(void){
@@ -91,7 +91,7 @@ typedef struct list{
     }
     //Update first to new value
     lp->head->first=(lp->head->first-1 +lp->head->count)%lp->head->size;
-    lp->head-data[lp->head->first]=item;
+    lp->head->data[lp->head->first]=item;
     lp->head->count++;
     lp->count++;
 
@@ -107,7 +107,7 @@ typedef struct list{
         newNode->size=NODE_SIZE;
         newNode->first=0;
         newNode->count=0;
-        
+
         newNode->prev=lp->tail;
         newNode->next=NULL;
         lp->tail->next=newNode;
@@ -120,6 +120,15 @@ typedef struct list{
  }
 
  void *removeFirst(LIST *lp){
+    assert(lp!=NULL && lp->count>0);
+    if(lp->head->count==0){
+        NODE *temp=lp->head;
+        lp->head=temp->next;
+        lp->head->prev=temp->prev;
+        free(temp);
+        return;
+    }
+    lp->head->first=(lp->head->first +1 +lp->head->count)%lp->head->size;
 
  }
 
