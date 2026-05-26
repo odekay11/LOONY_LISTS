@@ -90,7 +90,7 @@ typedef struct list{
         newNode->count=0;
     }
     //Update first to new value
-    lp->head->first=(lp->head->first-1 +lp->head->count)%lp->head->size;
+    lp->head->first=(lp->head->first-1 +lp->head->size)%lp->head->size;
     lp->head->data[lp->head->first]=item;
     lp->head->count++;
     lp->count++;
