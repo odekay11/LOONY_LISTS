@@ -115,6 +115,7 @@ typedef struct list{
  */
  void addFirst(LIST *lp, void *item){
     assert(lp!=NULL);
+    //alocate new node
     if(lp->head->count ==lp->head->size){
         NODE *newNode=malloc(sizeof(NODE));
         assert(newNode!=NULL);
@@ -129,6 +130,7 @@ typedef struct list{
         newNode->count=0;
     }
     //Update first to new value
+    //-1 makes it so first moves slot before the current first
     lp->head->first=(lp->head->first-1 +lp->head->size)%lp->head->size;
     lp->head->data[lp->head->first]=item;
     lp->head->count++;
@@ -147,6 +149,7 @@ typedef struct list{
  */
  void addLast(LIST *lp, void *item){
     assert(lp!=NULL);
+    //allocate new node if last node is full
     if(lp->tail->count == lp->tail->size){
         NODE *newNode=malloc(sizeof(NODE));
         assert(newNode!=NULL);
@@ -184,7 +187,7 @@ typedef struct list{
     assert(lp!=NULL && lp->count>0);
     //Get value
     void *value=lp->head->data[lp->head->first];
-    //Move first
+    //Move first to next slot 
     lp->head->first=(lp->head->first +1 )%lp->head->size;
     lp->head->count--;
     lp->count--;
@@ -198,7 +201,7 @@ typedef struct list{
     }
     return value;
  }
- /*removeFirst:
+ /*removeLast:
  * Purpose:
  *  Remove the value at the last slot in the last node from the list.
  *  If node is empty after removal it frees the node.
