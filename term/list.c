@@ -14,7 +14,9 @@
 #include <assert.h>
 #include <stdlib.h>
 #include "list.h"
-#define NODE_SIZE 64
+
+//node size
+#define NODE_SIZE 16
 
 //Node structure definition
 typedef struct node{
@@ -119,13 +121,20 @@ typedef struct list{
     if(lp->head->count ==lp->head->size){
         NODE *newNode=malloc(sizeof(NODE));
         assert(newNode!=NULL);
-        newNode->data=malloc(sizeof(void *)*NODE_SIZE);
+        //double node size to maintain O(log n) indexing time
+        int nSize;
+        if(lp->head->size > lp->tail->size){
+            nSize=lp->head->size*2;
+        }else{
+            nSize=lp->tail->size*2;
+        }
+        newNode->data=malloc(sizeof(void *)*(nSize));
         assert(newNode->data!=NULL);
         newNode->next=lp->head;
         newNode->prev=NULL;
         lp->head->prev=newNode;
         lp->head=newNode;
-        newNode->size=NODE_SIZE;
+        newNode->size=nSize;
         newNode->first=0;
         newNode->count=0;
     }
@@ -151,11 +160,18 @@ typedef struct list{
     assert(lp!=NULL);
     //allocate new node if last node is full
     if(lp->tail->count == lp->tail->size){
+        
         NODE *newNode=malloc(sizeof(NODE));
         assert(newNode!=NULL);
-        newNode->data=malloc(sizeof(void *)*NODE_SIZE);
+        int nSize;
+        if(lp->head->size > lp->tail->size){
+            nSize=lp->head->size*2;
+        }else{
+            nSize=lp->tail->size*2;
+        }
+        newNode->data=malloc(sizeof(void *)*nSize);
         assert(newNode->data!=NULL);
-        newNode->size=NODE_SIZE;
+        newNode->size=nSize;
         newNode->first=0;
         newNode->count=0;
 
@@ -275,7 +291,7 @@ void *getLast(LIST *lp){
  * Return:
  *  temp->data[(temp->first+index)%temp->size]=value found at the index
  * Big O:
- *  O(log n)
+ *  O( log n)
  */
 void *getItem(LIST *lp, int index){
     assert(lp!=NULL && index>=0 && lp->count>index);
@@ -298,8 +314,9 @@ void *getItem(LIST *lp, int index){
         }
         index=index-nodeStart;
     }
+        
     return temp->data[(temp->first+index)%temp->size];
-
+    
  }
 /*setItem:
  * Purpose:
@@ -334,6 +351,7 @@ void setItem(LIST *lp, int index, void *item){
         }
         index=index-nodeStart;
     }
+        
     temp->data[(temp->first+index)%temp->size]=item;
 
  }
